@@ -34,6 +34,7 @@
 
 #include <config.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -1041,13 +1042,14 @@ input_callback (Widget *w, Widget *sender, widget_msg_t msg, int parm, void *dat
             return MSG_NOT_HANDLED;
 
         // When pasting multiline text, insert literal Enter
-        if ((parm & ~KEY_M_MASK) == '\n')
-        {
-            quote = TRUE;
-            v = input_handle_char (in, '\n');
-            quote = FALSE;
-            return v;
-        }
+	// disable this to allow ctrl-enter shortcuts for panel
+        //if ((parm & ~KEY_M_MASK) == '\n')
+        //{
+        //    quote = TRUE;
+        //    v = input_handle_char (in, '\n');
+        //    quote = FALSE;
+        //    return v;
+        //}
 
         return input_handle_char (in, parm);
 
@@ -1099,9 +1101,10 @@ input_handle_char (WInput *in, int key)
     }
 
     command = widget_lookup_key (WIDGET (in), key);
+    //fprintf(stderr, " input_char: %d\n", key);
     if (command == CK_IgnoreKey)
     {
-        if (key > 255)
+        if (key < 32 || key > 255)
             return MSG_NOT_HANDLED;
         if (in->first)
             port_region_marked_for_delete (in);

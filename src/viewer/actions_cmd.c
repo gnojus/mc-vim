@@ -743,7 +743,8 @@ mcview_dialog_callback (Widget *w, Widget *sender, widget_msg_t msg, int parm, v
 
         /* Note: the buttonbar sends messages directly to the the WView, not to
          * here, which is why we can pass NULL in the following call. */
-        return mcview_execute_cmd (NULL, parm);
+        view = (WView *) widget_find_by_type (w, mcview_callback);
+        return mcview_execute_cmd (view, parm);
 
     case MSG_VALIDATE:
         view = (WView *) widget_find_by_type (w, mcview_callback);

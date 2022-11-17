@@ -58,7 +58,7 @@
 
 /* This holds the command line */
 WInput *cmdline;
-
+int cmdline_focus = TRUE;
 /*** file scope macro definitions ****************************************************************/
 
 /*** file scope type declarations ****************************************************************/
@@ -105,6 +105,7 @@ enter (WInput *lc_cmdline)
     if (strncmp (cmd, "cd", 2) == 0 && (cmd[2] == '\0' || whitespace (cmd[2])))
     {
         cd_to (cmd + 2);
+        focus_prompt(FALSE);
         input_clean (lc_cmdline);
         return MSG_HANDLED;
     }
@@ -154,6 +155,7 @@ enter (WInput *lc_cmdline)
 
         input_clean (lc_cmdline);
         shell_execute (command->str, 0);
+        focus_prompt(FALSE);
         g_string_free (command, TRUE);
 
 #ifdef ENABLE_SUBSHELL
@@ -190,8 +192,10 @@ enter (WInput *lc_cmdline)
 static cb_ret_t
 command_callback (Widget *w, Widget *sender, widget_msg_t msg, int parm, void *data)
 {
+    // return MSG_HANDLED;
     switch (msg)
     {
+
     case MSG_KEY:
         // Special case: we handle the enter key
         if (parm == '\n')
@@ -200,6 +204,7 @@ command_callback (Widget *w, Widget *sender, widget_msg_t msg, int parm, void *d
 
     default:
         return input_callback (w, sender, msg, parm, data);
+        // input_callback (w, sender, msg, parm, data);
     }
 }
 

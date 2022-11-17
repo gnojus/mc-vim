@@ -63,6 +63,8 @@ enum
     CK_Move,
     CK_Delete,
     CK_MakeDir,
+    CK_CmdFocus,
+    CK_CmdUnfocus,
     CK_ChangeMode,
     CK_ChangeOwn,
     CK_ChangeOwnAdvanced,

@@ -82,6 +82,8 @@ static name_keymap_t command_names[] = {
     ADD_KEYMAP_NAME (Move),
     ADD_KEYMAP_NAME (Delete),
     ADD_KEYMAP_NAME (MakeDir),
+    ADD_KEYMAP_NAME (CmdFocus),
+    ADD_KEYMAP_NAME (CmdUnfocus),
     ADD_KEYMAP_NAME (ChangeMode),
     ADD_KEYMAP_NAME (ChangeOwn),
     ADD_KEYMAP_NAME (ChangeOwnAdvanced),

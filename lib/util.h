@@ -183,6 +183,7 @@ const char *size_trunc (uintmax_t size, gboolean use_si);
  * NOTE: uses the same static buffer as size_trunc. */
 const char *size_trunc_sep (uintmax_t size, gboolean use_si);
 
+void format_size(char *buffer, unsigned int len, uintmax_t size);
 /* Print file SIZE to BUFFER, but don't exceed LEN characters,
  * not including trailing 0. BUFFER should be at least LEN+1 long.
  *
