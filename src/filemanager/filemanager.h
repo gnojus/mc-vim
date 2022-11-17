@@ -47,6 +47,8 @@ WPanel *change_panel (void);
 void save_cwds_stat (void);
 gboolean quiet_quit_cmd (void);
 gboolean do_nc (void);
+void focus_prompt(int focus);
+
 
 /*** inline functions ****************************************************************************/
 

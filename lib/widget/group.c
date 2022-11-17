@@ -358,6 +358,8 @@ group_update_cursor (WGroup *g)
 {
     GList *p = g->current;
 
+    tty_cursor(1);
+
     if (p != NULL && widget_get_state (WIDGET (g), WST_ACTIVE))
         do
         {
@@ -373,6 +375,8 @@ group_update_cursor (WGroup *g)
             p = group_get_widget_next_of (p);
         }
         while (p != g->current);
+
+    tty_cursor(0);
 
     return MSG_NOT_HANDLED;
 }

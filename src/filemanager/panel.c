@@ -144,6 +144,7 @@ typedef enum
 static const char *string_file_name (const file_entry_t *fe, int len);
 static const char *string_file_size (const file_entry_t *fe, int len);
 static const char *string_file_size_brief (const file_entry_t *fe, int len);
+static const char *string_file_size_human (const file_entry_t *fe, int len);
 static const char *string_file_type (const file_entry_t *fe, int len);
 static const char *string_file_mtime (const file_entry_t *fe, int len);
 static const char *string_file_atime (const file_entry_t *fe, int len);
@@ -184,7 +185,9 @@ static panel_field_t panel_fields[] = {
     { "size", 7, FALSE, J_RIGHT,
       // TRANSLATORS: one single character to represent 'size' sort mode
       // TRANSLATORS: no need to translate 'sort', it's just a context prefix
-      N_ ("sort|s"), N_ ("&Size"), TRUE, TRUE, string_file_size, (GCompareFunc) sort_size },
+      N_ ("sort|s"), N_ ("Size"), TRUE, TRUE, string_file_size, (GCompareFunc) sort_size },
+    { "hsize", 5, FALSE, J_RIGHT, "", N_ ("Human readable Size"), FALSE, FALSE, string_file_size_human,
+      (GCompareFunc) sort_size },
     { "bsize", 7, FALSE, J_RIGHT, "", N_ ("Block Size"), FALSE, FALSE, string_file_size_brief,
       (GCompareFunc) sort_size },
     { "type", 1, FALSE, J_LEFT, "", "", FALSE, TRUE, string_file_type, NULL },
@@ -415,6 +418,27 @@ string_file_size (const file_entry_t *fe, int len)
 
     return buffer;
 }
+
+static const char *
+string_file_size_human (const file_entry_t * fe, int len)
+{
+    static char buffer[BUF_TINY];
+
+    /* Don't ever show size of ".." since we don't calculate it */
+    if (DIR_IS_DOTDOT (fe->fname->str))
+        return _("DIR");
+
+    if (S_ISLNK (fe->st.st_mode) && !link_isdir (fe))
+        return _("LNK");
+
+    if ((S_ISDIR (fe->st.st_mode) || link_isdir (fe)) && !fe->f.dir_size_computed)
+        return _("DIR");
+
+    format_size (buffer, (unsigned int) len, fe->st.st_size);
+
+    return buffer;
+}
+
 
 /* --------------------------------------------------------------------------------------------- */
 /** bsize */
@@ -1922,13 +1946,15 @@ cd_up_dir (WPanel *panel)
     vfs_path_free (up_dir, TRUE);
 }
 
+static void do_select (WPanel * panel, int i);
+
 /* --------------------------------------------------------------------------------------------- */
 /** Used to emulate Lynx's entering leaving a directory with the arrow keys */
 
 static cb_ret_t
 maybe_cd (WPanel *panel, gboolean move_up_dir)
 {
-    if (panels_options.navigate_with_arrows && input_is_empty (cmdline))
+    if (panels_options.navigate_with_arrows && !cmdline_focus)
     {
         const file_entry_t *fe;
 
@@ -1946,12 +1972,17 @@ maybe_cd (WPanel *panel, gboolean move_up_dir)
 
             vpath = vfs_path_from_str (fe->fname->str);
             panel_cd (panel, vpath, cd_exact);
+            if (panel->dir.len > 1) {
+                do_select(panel, 1);
+                select_item(panel);
+            }
+                
             vfs_path_free (vpath, TRUE);
             return MSG_HANDLED;
         }
     }
 
-    return MSG_NOT_HANDLED;
+    return MSG_HANDLED;
 }
 
 /* --------------------------------------------------------------------------------------------- */
@@ -2918,6 +2949,7 @@ do_enter_on_file_entry (WPanel *panel, const file_entry_t *fe)
 
         cmd = g_strconcat ("." PATH_SEP_STR, fname_quoted, (char *) NULL);
         g_free (fname_quoted);
+	tty_cursor(1);
 
         shell_execute (cmd, 0);
         g_free (cmd);
@@ -3402,6 +3434,9 @@ panel_do_cd_int (WPanel *panel, const vfs_path_t *new_dir_vpath, enum cd_enum cd
         panel_set_current (panel, -1);
 
     panel_set_current_by_name (panel, get_parent_dir_name (panel->cwd_vpath, olddir_vpath));
+    if (panel->dir.len > 1 && panel->current == 0) {
+        do_select(panel, 1);
+    }
 
     load_hint (FALSE);
     panel->dirty = TRUE;
@@ -3722,7 +3757,7 @@ panel_key (WPanel *panel, int key)
 {
     long command;
 
-    if (is_abort_char (key))
+    if (is_abort_char (key) && panel->quick_search.active)
     {
         stop_search (panel);
         return MSG_HANDLED;

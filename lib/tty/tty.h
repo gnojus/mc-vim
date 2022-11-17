@@ -108,6 +108,7 @@ extern int tty_reset_screen (void);
 extern void tty_touch_screen (void);
 
 extern void tty_gotoyx (int y, int x);
+extern void tty_cursor (int c);
 extern void tty_getyx (int *py, int *px);
 
 extern void tty_set_alt_charset (gboolean alt_charset);

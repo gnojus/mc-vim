@@ -1063,7 +1063,7 @@ tree_key (WTree *tree, int key)
 
     if (is_abort_char (key))
     {
-        if (tree->is_panel)
+        if (tree->is_panel && tree->searching)
         {
             tree->searching = FALSE;
             show_tree (tree);
