@@ -386,6 +386,61 @@ size_trunc_sep (uintmax_t size, gboolean use_si)
     return d;
 }
 
+void
+format_size(char *buffer, unsigned int len, uintmax_t size)
+{   
+    static const char *const sfx[] = { "K", "M", "G", "T", "P", "E", "Z", "Y", NULL };
+    if (size < 1024) {
+        g_snprintf(buffer, len + 1, "%d", (int) size);
+        return;
+    }
+    uintmax_t amount = size;
+    for (int i = 0; sfx[i]; i++) {
+        uintmax_t quo = (amount + 512) / 1024; 
+        if (quo < 1024) {
+            const uintmax_t power = 1 << (uintmax_t) (i+1) * 10;
+            uintmax_t rem = size % power; 
+            int sub = rem >= power / 2;
+
+            rem = (rem * 10 + power / 2) / power;
+            if (rem == 10) {
+                rem = sub =  0;
+            }
+
+            if (quo < 10) {
+                g_snprintf(buffer, len + 1, "%d.%d%s", (int) quo - sub, (int) rem, sfx[i]);
+            } else {
+                g_snprintf(buffer, len + 1, "%d%s", (int) quo, sfx[i]);
+            }
+
+            break;
+        }
+        amount /= 1024;
+        continue;
+        uintmax_t s = size; 
+        // size = (size + 512) / 1024;
+
+        if (size < 1024) {
+            int q = s % 1024;
+            int sub = q >= 512;
+            if (q > 972) {
+                q = sub = 0;
+            } else {
+                /* division with rounding */
+                q = (q * 10 + 512) / 1024;
+            }
+
+            if (size < 10) {
+                g_snprintf(buffer, len + 1, "%d.%d%s", (int) size - sub, q, sfx[i]);
+            } else {
+                g_snprintf(buffer, len + 1, "%d%s", (int) size, sfx[i]);
+            }
+
+            break;
+        }
+    }
+}
+
 /* --------------------------------------------------------------------------------------------- */
 /**
  * Print file SIZE to BUFFER, but don't exceed LEN characters,

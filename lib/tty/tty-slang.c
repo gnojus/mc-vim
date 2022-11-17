@@ -473,6 +473,20 @@ tty_gotoyx (int y, int x)
     SLsmg_gotorc (y, x);
 }
 
+int lastx = 0, lasty = 0;
+void
+tty_cursor (int c)
+{
+    SLtt_set_cursor_visibility ( c != 0 );
+    SLtt_normal_video();
+    if (c) {
+        tty_gotoyx(lastx, lasty);
+    } else {
+        tty_getyx(&lastx, &lasty);
+        tty_gotoyx(-1, -1);
+    }
+}
+
 /* --------------------------------------------------------------------------------------------- */
 
 void

@@ -875,6 +875,8 @@ create_file_manager (void)
     the_prompt->color = prompt_colors;
     group_add_widget (g, the_prompt);
 
+    focus_prompt(FALSE);
+
     the_bar = buttonbar_new ();
     group_add_widget (g, the_bar);
     midnight_set_buttonbar (the_bar);
@@ -1023,7 +1025,10 @@ quit_cmd_internal (int quiet)
         else if ((q = exit_subshell () ? 1 : 0) != 0)
 #endif
             stop_dialogs ();
+        tty_cursor (1);
     }
+    
+
 
     if (q != 0)
         quit |= 1;
@@ -1069,6 +1074,13 @@ toggle_show_hidden (void)
 }
 
 /* --------------------------------------------------------------------------------------------- */
+
+void
+focus_prompt(int focus) {
+    widget_disable ((Widget *)cmdline, !focus);
+    widget_disable ((Widget *)the_prompt, !focus);
+    cmdline_focus = focus;
+}
 
 static cb_ret_t
 midnight_execute_cmd (Widget *sender, long command)
@@ -1251,6 +1263,12 @@ midnight_execute_cmd (Widget *sender, long command)
     case CK_MakeDir:
         mkdir_cmd (current_panel);
         break;
+    case CK_CmdFocus:
+        focus_prompt(TRUE);
+        break;
+    case CK_CmdUnfocus:
+        focus_prompt(FALSE);
+        break;
     case CK_OptionsPanel:
         panel_options_box ();
         break;
@@ -1379,7 +1397,7 @@ is_cmdline_mute (void)
        it's activity. Thus, we can't use get_current_type() here.
        current_panel should point to actually current active panel
        independently of it's type. */
-    return (!widget_get_state (WIDGET (current_panel), WST_FOCUSED)
+    return !cmdline_focus || (!widget_get_state (WIDGET (current_panel), WST_FOCUSED)
             && (get_other_type () == view_quick || get_other_type () == view_tree));
 }
 
@@ -1473,6 +1491,10 @@ midnight_callback (Widget *w, Widget *sender, widget_msg_t msg, int parm, void *
             if (handle_cmdline_enter ())
                 return MSG_HANDLED;
             // Else: the panel will handle it.
+        }
+
+        if (!is_cmdline_mute()) {
+            return send_message (cmdline, NULL, MSG_KEY, parm, NULL);
         }
 
         if ((!mc_global.tty.alternate_plus_minus
