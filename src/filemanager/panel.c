@@ -3730,6 +3730,8 @@ panel_execute_cmd (WPanel *panel, long command)
         panel->sort_info.reverse = !panel->sort_info.reverse;
         panel_set_sort_order (panel, panel->sort_field);
         break;
+    case CK_SortByNameAZ:
+        panel->sort_info.reverse = 0;
     case CK_SortByName:
         panel_set_sort_type_by_id (panel, "name");
         break;
@@ -3742,6 +3744,8 @@ panel_execute_cmd (WPanel *panel, long command)
     case CK_SortBySize:
         panel_set_sort_type_by_id (panel, "size");
         break;
+    case CK_SortByMTimeInv:
+        panel->sort_info.reverse = 1;
     case CK_SortByMTime:
         panel_set_sort_type_by_id (panel, "mtime");
         break;

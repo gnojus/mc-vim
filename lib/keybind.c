@@ -238,10 +238,12 @@ static name_keymap_t command_names[] = {
     ADD_KEYMAP_NAME (SortPrev),
     ADD_KEYMAP_NAME (SortReverse),
     ADD_KEYMAP_NAME (SortByName),
+    ADD_KEYMAP_NAME (SortByNameAZ),
     ADD_KEYMAP_NAME (SortByVersion),
     ADD_KEYMAP_NAME (SortByExt),
     ADD_KEYMAP_NAME (SortBySize),
     ADD_KEYMAP_NAME (SortByMTime),
+    ADD_KEYMAP_NAME (SortByMTimeInv),
     ADD_KEYMAP_NAME (CdParentSmart),
     ADD_KEYMAP_NAME (CycleListingFormat),
 
