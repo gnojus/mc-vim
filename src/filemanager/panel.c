@@ -1946,7 +1946,10 @@ cd_up_dir (WPanel *panel)
     vfs_path_free (up_dir, TRUE);
 }
 
-static void do_select (WPanel * panel, int i);
+static void do_select (WPanel * panel, int i) {
+    panel->current = i;
+    select_item (panel);
+}
 
 /* --------------------------------------------------------------------------------------------- */
 /** Used to emulate Lynx's entering leaving a directory with the arrow keys */
