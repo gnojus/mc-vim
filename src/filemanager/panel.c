@@ -2287,6 +2287,11 @@ prev_page (WPanel *panel)
         panel->current = 0;
     else
         panel->current -= items;
+
+    if (panel->current == 0 && panel->dir.len > 1) {
+        panel->current = 1;
+    }
+
     panel->top -= items;
 
     select_item (panel);
@@ -2354,7 +2359,11 @@ next_half_page (WPanel * panel)
 
     unselect_item (panel);
     items = panel_lines (panel);
-    panel_move_current (panel, items / 2);
+    panel->current += items * 4 / 11;
+    panel->current = MIN (panel->current, panel->dir.len - 1);
+    if (panel->current >= panel->top + items) {
+        panel->top += items;
+    }
 
     select_item (panel);
     paint_dir (panel);
@@ -2365,11 +2374,16 @@ prev_half_page (WPanel * panel)
 {
     int items;
 
-    if (panel->current == panel->dir.len - 1)
+    if (panel->current <= 1)
         return;
 
+    unselect_item (panel);
     items = panel_lines (panel);
-    panel_move_current (panel, -items / 2);
+    panel->current -= items * 4 / 11;
+    panel->current = MAX (panel->current, 1);
+    if (panel->current < panel->top) {
+        panel->top -= items;
+    }
 
     paint_dir (panel);
 }
