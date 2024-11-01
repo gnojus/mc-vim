@@ -1,3 +1,10 @@
+Vim mode
+--------
+
+This is a fork of mc made to be somewhat similar to vim and its keybindings.
+Due to the changes to being so so extreme, I didn't bother trying to submit
+this upstream.
+
 Contents
 --------
 
