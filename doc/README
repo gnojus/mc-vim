@@ -5,6 +5,38 @@ This is a fork of mc made to be somewhat similar to vim and its keybindings.
 Due to the changes to being so so extreme, I didn't bother trying to submit
 this upstream.
 
+Vim Keybindings
+---------------
+The main panel UI has two modes:
+ - normal, in which keys allow to operate on file listings
+ - insert, in which keys modify the text in command line prompt
+
+Available key bindings:
+ - i: enter insert mode
+ - esc: close dialog/enter normal mode
+ - k/j: move up/down
+ - h: parent dir
+ - l: enter dir
+ - K/J: mark file and move up/down
+ - b/space: move page up/down
+ - u/d: move half page up/down
+ - o: mkdir
+ - c: copy
+ - C: copy into current panel
+ - m: move file
+ - M: move into current panel
+ - D: delete (with confirmation)
+ - f: quick search
+ - s: full search
+ - q: quit
+ - t: hotlist
+ - H: dir history
+
+Additional notes:
+ - new panel column type hsize: human readable size, simillar to ls -lh
+ - default lynx-like motion to support jhkl navigation
+ - escape default timout is 0
+
 Contents
 --------
 
