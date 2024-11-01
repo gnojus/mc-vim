@@ -2344,6 +2344,35 @@ goto_parent_dir (WPanel *panel)
 }
 
 /* --------------------------------------------------------------------------------------------- */
+static void
+next_half_page (WPanel * panel)
+{
+    int items;
+
+    if (panel->current == panel->dir.len - 1)
+        return;
+
+    unselect_item (panel);
+    items = panel_lines (panel);
+    panel_move_current (panel, items / 2);
+
+    select_item (panel);
+    paint_dir (panel);
+}
+
+static void
+prev_half_page (WPanel * panel)
+{
+    int items;
+
+    if (panel->current == panel->dir.len - 1)
+        return;
+
+    items = panel_lines (panel);
+    panel_move_current (panel, -items / 2);
+
+    paint_dir (panel);
+}
 
 static void
 next_page (WPanel *panel)
@@ -2434,13 +2463,13 @@ goto_bottom_file (WPanel *panel)
 static void
 move_home (WPanel *panel)
 {
-    if (panel->dir.len == 0 || panel->current <= 0)
+    if (panel->dir.len == 0 || panel->current <= 1)
         return;
 
     unselect_item (panel);
 
     panel->top = 0;
-    panel->current = 0;
+    panel->current = panel->dir.len > 0;
 
     paint_dir (panel);
     select_item (panel);
@@ -3636,6 +3665,12 @@ panel_execute_cmd (WPanel *panel, long command)
         break;
     case CK_PageUp:
         prev_page (panel);
+        break;
+    case CK_HalfPageDown:
+        next_half_page (panel);
+        break;
+    case CK_HalfPageUp:
+        prev_half_page (panel);
         break;
     case CK_CdChild:
         goto_child_dir (panel);
