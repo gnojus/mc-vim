@@ -11,7 +11,7 @@ The main panel UI has two modes:
  - normal, in which keys allow to operate on file listings
  - insert, in which keys modify the text in command line prompt
 
-Available key bindings:
+Available vim key bindings:
  - i: enter insert mode
  - esc: close dialog/enter normal mode
  - k/j: move up/down
@@ -31,6 +31,7 @@ Available key bindings:
  - q: quit
  - t: hotlist
  - H: dir history
+ - .: toggle hidden (dot) files
 
 Additional notes:
  - new panel column type hsize: human readable size, simillar to ls -lh
