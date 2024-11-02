@@ -32,11 +32,20 @@ Available vim key bindings:
  - t: hotlist
  - H: dir history
  - .: toggle hidden (dot) files
+ - r: refresh listing
+ - v: view file (internal viewer)
+ - e: edit file (external editor)
+ - alt-k: sort by name AZ
+ - alt-l: sort by mod time from newest
 
 Additional notes:
  - new panel column type hsize: human readable size, simillar to ls -lh
  - default lynx-like motion to support jhkl navigation
  - escape default timout is 0
+ - two new sort modes: SortByMTimeInv and SortByNameAZ for quick switching
+ - default to external editor
+ - allow opening files when a command is running in subshell
+ - more human friendly default listing for panels
 
 Contents
 --------
