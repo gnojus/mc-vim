@@ -1932,7 +1932,7 @@ panel_format (WPanel *panel)
 
     default:
     case list_full:
-        return "half type name | size | mtime";
+        return "half type name mark hsize space | mtime";
     }
 }
 
@@ -1953,7 +1953,7 @@ mini_status_format (WPanel *panel)
         return "half type name space bsize space perm space";
 
     case list_full:
-        return "half type name mark hsize space | mtime";
+        return "half type name hsize";
 
     default:
     case list_user:
