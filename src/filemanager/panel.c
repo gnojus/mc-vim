@@ -3783,7 +3783,6 @@ panel_execute_cmd (WPanel *panel, long command)
         panel_set_sort_order (panel, panel->sort_field);
         break;
     case CK_SortByNameAZ:
-        panels_options.mix_all_files = FALSE;
         panel->sort_info.reverse = strcmp (panel->sort_field->id, "name") == 0;
     case CK_SortByName:
         panel_set_sort_type_by_id (panel, "name");
@@ -3798,11 +3797,12 @@ panel_execute_cmd (WPanel *panel, long command)
         panel_set_sort_type_by_id (panel, "size");
         break;
     case CK_SortByMTimeInv:
-        panels_options.mix_all_files = TRUE;
         panel->sort_info.reverse = strcmp (panel->sort_field->id, "mtime") != 0;
         panel_set_sort_type_by_id (panel, "mtime");
-        panel->current = MIN (1, panel->dir.len - 1);
-        panel_reload (panel);
+        if (panel->current != 1) {
+            panel->current = MIN (1, panel->dir.len - 1);
+            panel_reload (panel);
+        }
         break;
     case CK_SortByMTime:
         panel_set_sort_type_by_id (panel, "mtime");
