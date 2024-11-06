@@ -402,7 +402,7 @@ sort_time (file_entry_t *a, file_entry_t *b)
     int ad = MY_ISDIR (a);
     int bd = MY_ISDIR (b);
 
-    if (ad == bd || panels_options.mix_all_files)
+    if (ad == bd || panels_options.mix_all_files || reverse)
     {
         int result = _GL_CMP (a->st.st_mtime, b->st.st_mtime);
 
