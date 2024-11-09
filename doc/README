@@ -18,6 +18,8 @@ Available vim key bindings:
  - h: parent dir
  - l: enter dir
  - K/J: mark file and move up/down
+ - g: move to first entry
+ - G: move to last entry
  - b/space: move page up/down
  - u/d: move half page up/down
  - o: mkdir
