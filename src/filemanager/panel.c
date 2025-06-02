@@ -2382,7 +2382,7 @@ prev_half_page (WPanel * panel)
     panel->current -= items * 4 / 11;
     panel->current = MAX (panel->current, 1);
     if (panel->current < panel->top) {
-        panel->top -= items;
+        panel->top = MAX (panel->top - items, 0);
     }
 
     paint_dir (panel);
