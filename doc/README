@@ -48,6 +48,7 @@ Additional notes:
  - default to external editor
  - allow opening files when a command is running in subshell
  - more human friendly default listing for panels
+ - use pandoc for msdoc
 
 Contents
 --------
