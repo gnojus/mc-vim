@@ -52,7 +52,9 @@ do_view_action() {
         fi
         ;;
     msdoc)
-        if command -v wvHtml >/dev/null 2>&1; then
+        if command -v pandoc >/dev/null 2>&1; then
+            pandoc --columns=92 --to=plain "${MC_EXT_FILENAME}"
+        elif command -v wvHtml >/dev/null 2>&1; then
             tmp=`mktemp -d ${TMPDIR:-/tmp}/%p.XXXXXX`
             wvHtml "${MC_EXT_FILENAME}" --targetdir="$tmp" page.html
             elinks -dump "$tmp/page.html"
